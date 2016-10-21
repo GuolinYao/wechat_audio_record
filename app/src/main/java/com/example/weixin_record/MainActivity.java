@@ -22,8 +22,9 @@ public class MainActivity extends Activity {
     private ListView mlistview;
     private ArrayAdapter<Recorder> mAdapter;
     private View viewanim;
-    private boolean isPlaying = false;
+    private View currentView;
     private List<Recorder> mDatas = new ArrayList<MainActivity.Recorder>();
+    private boolean isPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,18 +54,20 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                if (isPlaying) {
-                    viewanim.setBackgroundResource(R.drawable.adj);
-                    isPlaying = false;
-                    MediaManager.stop();
-                    return;
-                }
                 // 播放动画
                 if (viewanim != null) {//让第二个播放的时候第一个停止播放
-                    viewanim.setBackgroundResource(R.drawable.play);
+                    currentView = viewanim;
+                    viewanim.setBackgroundResource(R.drawable.adj);
                     viewanim = null;
+                    MediaManager.stop();
                 }
                 viewanim = view.findViewById(R.id.id_recorder_anim);
+                if (currentView == viewanim) {
+                    if (isPlaying){
+                        isPlaying = false;
+                        return;
+                    }
+                }
                 viewanim.setBackgroundResource(R.drawable.play);
                 AnimationDrawable drawable = (AnimationDrawable) viewanim
                         .getBackground();
